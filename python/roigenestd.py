@@ -10,6 +10,7 @@ tool for roi generation
 import numpy as np
 import cv2
 import os
+import shutil
 import dicom
 import time
 
@@ -629,7 +630,7 @@ def menudraw(dimtabx,dimtaby,slnt):
 #    
 def populate(pp,sl):
     print 'populate'
-    for key in classif:
+    for key,value in classif.items():
         dirroi=os.path.join(pp,key)
 #        print dirroi,sl
         if os.path.exists(dirroi):
@@ -653,8 +654,8 @@ cwd=os.getcwd()
 patient_path_complet=os.path.join(top,path_patient)
 #patient_path_complet=os.path.join(patient_path_complet,images[scannumber]ource)
 a= os.walk(patient_path_complet).next()[1]
-def openfichierroi(patient,patient_path_complet):
-    global menus,imageview,zoneverticalgauche,zoneverticaldroite,zonehorizontal,dimtabx,dimtaby,dirpath_patient
+#print patient_path_complet,a
+for patient in a:
     dirpath_patient=os.path.join(patient_path_complet,patient)
    
     dirsource=os.path.join(dirpath_patient,source_name)
@@ -671,4 +672,3 @@ def openfichierroi(patient,patient_path_complet):
     zonehorizontal=((0,0),(dimtabx,20))
     zoneverticaldroite=((dimtabx-25,0),(dimtabx,dimtaby))
     loop(slnt,dirsourcescan,dimtabx,dimtaby)
-    return 'completed'

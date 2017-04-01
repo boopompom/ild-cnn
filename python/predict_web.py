@@ -24,7 +24,7 @@ htmldir='html'
 cwd=os.getcwd()
 (cwdtop,tail)=os.path.split(cwd)
 #path_pickle='CNNparameters'
-
+path_patient=''
 path_html=os.path.join(cwdtop,'static/html')
 #dirpickle=os.path.join(cwdtop,path_pickle)
 
@@ -235,18 +235,18 @@ class PredictTool(object):
         yield app
  
         for user in some_sg:    
-            predictdone=False
+            predictdoneF=False
             yield "<input type='checkbox' checked name = 'lispatientselect' value='"+user+"' id='"+user+"'/>"
             if stsdir[user]['cross']==True:
                 statustext=' CROSS predict already done'
-                predictdone=True
+                predictdoneF=True
             else:
                     statustext=''
             if stsdir[user]['front']==True:
                 statustext=statustext+ ', FRONT predict already done'
             else:
                 statustext=statustext+''
-            if predictdone:
+            if predictdoneF:
                     predictdone='classpredictdone'
             else:
                     predictdone='classpredictnotdone'                    

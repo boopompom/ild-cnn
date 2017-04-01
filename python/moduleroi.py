@@ -7,7 +7,7 @@ Created on Mon Mar 20 17:21:22 2017
 import os
 import cv2
 import shutil
-from tdGenePredictWeb import *
+from roigene import *
 import cPickle as pickle
 import numpy as np
 
@@ -85,29 +85,27 @@ classifc ={
      'tuberculosis':white
  }
 
+d='C:/Users/sylvain/Documents/boulot/startup/radiology/predicttool/path_patient'
 def lisdirprocess(d):
 #    a=os.listdir(d)
     a= os.walk(d).next()[1]
     print 'listdirprocess',a
     stsdir={}
     for dd in a:
-        stpred={}
+        stpred=[]
         ddd=os.path.join(d,dd)
-        datadir=os.path.join(ddd,path_data)
-        pathcross=os.path.join(datadir,datacrossn)
-        pathfront=os.path.join(datadir,datafrontn)
-        if os.path.exists(pathcross):
-            stpred['cross']=True
-        else:
-             stpred['cross']=False
-        if os.path.exists(pathfront):
-            stpred['front']=True
-        else:
-            stpred['front']=False
+        for key in classif:
+            datadir=os.path.join(ddd,key)
+            if os.path.exists(datadir):
+                listfile=os.listdir(datadir)
+                if len(listfile)>0:
+                    stpred.append(key)
         stsdir[dd]=stpred
     
     return a,stsdir
 
+#lisdirprocess(d)
+#ooo
 cwd=os.getcwd()
 
 def remove_folder(path):
@@ -525,33 +523,14 @@ def openfichier(ti,datacross,patch_list,proba,path_img):
         print 'error in the number of scan images compared to dicom numbering'
         return 'error in the number of scan images compared to dicom numbering'
     
-def visuarun(indata,path_patient):
-    listHug=indata['lispatient']
-    viewstyle=indata['typeofview']
+def roirun(indata,path_patient):
+    listHug=indata['lispatientselect']
+    
     print 'listhug',listHug
-    print 'viewstyle',viewstyle       
     print 'indata',indata
     print 'path_patient',path_patient
-
-    patient_path_complet=os.path.join(path_patient,listHug)
-    print patient_path_complet
-    path_data_dir=os.path.join(patient_path_complet,path_data)
-    if viewstyle=='cross':
-        datarep= pickle.load( open( os.path.join(path_data_dir,"datacross"), "r" ))
-        patch_list= pickle.load( open( os.path.join(path_data_dir,"patch_list_cross"), "r" ))
-        proba= pickle.load( open( os.path.join(path_data_dir,"proba_cross"), "r" ))
-    elif viewstyle=='front':
-        datarep= pickle.load( open( os.path.join(path_data_dir,"datafront"), "r" ))
-        patch_list= pickle.load( open( os.path.join(path_data_dir,"patch_list_front"), "r" ))
-        proba= pickle.load( open( os.path.join(path_data_dir,"proba_front"), "r" ))
-    else:
-        datarep= pickle.load( open( os.path.join(path_data_dir,"datacross"), "r" ))
-        patch_list= pickle.load( open( os.path.join(path_data_dir,"patch_list_merge"), "r" ))
-        proba= pickle.load( open( os.path.join(path_data_dir,"proba_merge"), "r" ))
-        
-        
-        
-    messageout=openfichier(viewstyle,datarep,patch_list,proba,patient_path_complet)
+            
+    messageout=openfichierroi(listHug,path_patient)
     return messageout
 #    
 #indata={'lispatient':'23','typeofview':'cross','thrpatch':0.8,'thrproba':0.6,'thrprobaUIP':0.6,'thrprobaMerge':0.6,
